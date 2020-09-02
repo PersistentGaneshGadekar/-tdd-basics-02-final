@@ -1,18 +1,38 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace ConsoleCalculator.App
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            var calc = new Calculator();
-            ConsoleKeyInfo key;
-            Console.WriteLine("Press Ctrl + C to close the program.");
-            while (IsKillSwitch(key = Console.ReadKey(true)) == false)
+            top:
+            try
             {
-                Console.Clear();
-                Console.WriteLine(calc.SendKeyPress(key.KeyChar));
+                var calc = new Calculator();
+                ConsoleKeyInfo key;
+                Console.WriteLine("Press Ctrl + C to close the program.");
+                while (IsKillSwitch(key = Console.ReadKey(true)) == false)
+                {
+                    Console.Clear();
+                    Console.WriteLine(calc.SendKeyPress(key.KeyChar));
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Error Enter not allowed. Do you want to continue? y or n");
+                string input = Console.ReadLine();
+                if(input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
+                {
+                    Console.Clear();
+                    goto top;
+                }
+                else
+                {
+                    System.Environment.Exit(0);
+                }
             }
         }
 

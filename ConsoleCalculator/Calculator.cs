@@ -9,7 +9,7 @@ namespace ConsoleCalculator
        public string inputnumber;
        public List<double> numbers=new List<double>();
        public List<char> operations=new List<char>();
-        Operations operationsObj = new Operations();
+       readonly  Operations operationsObj = new Operations();
        public string SendKeyPress(char key)
         {
            string displayinput=string.Empty;
@@ -112,9 +112,9 @@ namespace ConsoleCalculator
         {         
 
             if (Math.Sign(num) == 1)
-                num = num * (-1);
+                num *= (-1);
             else
-                num = num * (1);
+                num *= (1);
 
             return num;
         }
