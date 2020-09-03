@@ -7,7 +7,7 @@ namespace ConsoleCalculator
     public class Calculator
     {
        public string inputnumber;
-       public List<double> numbers=new List<double>();
+       public List<string> numbers=new List<string>();
        public List<char> operations=new List<char>();
        readonly  Operations operationsObj = new Operations();
        public string SendKeyPress(char key)
@@ -18,80 +18,95 @@ namespace ConsoleCalculator
             {
                 if(key =='c' || key=='C')
                 {
-                    //numbers.Clear();
-                    //operations.Clear();
-                    //inputnumber = string.Empty;
-                    //return "0";
-                    return operationsObj.clearConsole(this);
+                    return operationsObj.ClearConsole(this);
                 }
                 if (key == 's' || key == 'S')
                 {
                     if(numbers.Count == 1)
                     {
                         inputnumber = ToggleSign(Convert.ToDouble(numbers[0])).ToString();
-                        numbers[0] = Convert.ToDouble(inputnumber);
+                        numbers[0] = inputnumber ;
                     }
                     else if (numbers.Count == 2)
                     {
                         inputnumber = ToggleSign(Convert.ToDouble(numbers[1])).ToString();
-                        numbers[1] = Convert.ToDouble(inputnumber);
+                        numbers[1] = inputnumber ;
                     } 
                     return Convert.ToString(Convert.ToDouble(inputnumber));
                 }
                 if (numbers.Count <= 1 && !IsSignPress(  key) && operations.Count != 1)
                 {
-                    if (!string.IsNullOrEmpty(inputnumber) && inputnumber.Contains(".") && key == '.')
-                        return inputnumber;
-
-                    if (key == 's' || key == 'S')
+                    if (numbers.Count > 0 && !numbers[0].Contains(".") && key == '.')
                     {
-                        inputnumber = ToggleSign(Convert.ToDouble(inputnumber)).ToString();
+                        numbers[0] += key;
+                        displayinput = numbers[0];
+                        return displayinput;
+                    } else if (numbers.Count > 0 && numbers[0].Split('.').Length - 1 == 1 && key  != '.')
+                    {
+                        numbers[0] += key;
+                        displayinput = numbers[0];
+                        return displayinput;
+                    }else if (numbers.Count > 0 && numbers[0].Split('.').Length - 1 == 1 && key == '.')
+                    {
+                        displayinput = numbers[0];
+                        return displayinput;
+                    }
+
                         if (numbers.Count > 0)
-                        {
-                            numbers[0] = ToggleSign(Convert.ToDouble(numbers[0]));
-                        }
+                    {
+                        numbers[0] =  numbers[0] != "0" ? numbers[0].ToString() + key.ToString() :"0" ;
                     }
                     else
                     {
-                        if (numbers.Count > 0)
-                        {
-                            numbers[0] = Convert.ToDouble(numbers[0].ToString() + key.ToString());
-                        }
-                        else
-                        {
-                            numbers.Add(Convert.ToDouble(key.ToString()));
-                        }
-
+                        numbers.Add(  key.ToString() );
                     }
+
                     displayinput = Convert.ToString(numbers[0]);
                 }
                 else if (IsSignPress(key) && key.ToString() != "=") {
-                    operations.Clear();
-                    operations.Add(key); 
-                    displayinput = Convert.ToString(numbers[0]);
-                } else if (!IsSignPress(key) && numbers.Count >- 1)
-                {
-
-                    if (key == 's' || key == 'S')
+                    
+                    if (numbers.Count == 2)
                     {
-                        inputnumber = ToggleSign(Convert.ToDouble(inputnumber)).ToString();
-                        if (numbers.Count == 1)
-                        {
-                            numbers[1] = ToggleSign(Convert.ToDouble(numbers[1]));
-                        }
+                        operations.Clear();
+                        operations.Add(key);
+                        displayinput = operationsObj.Calculate(this); 
+                        operations.Add(key);
                     }
                     else
                     {
-                        if (numbers.Count == 2)
-                        {
-                            numbers[1] = Convert.ToDouble(numbers[1].ToString() + key.ToString());
-                        }
-                        else
-                        {
-                            numbers.Add(Convert.ToDouble(key.ToString()));
-                        }
-
+                        operations.Clear();
+                        operations.Add(key);
+                        displayinput = Convert.ToString(numbers[0]);
                     }
+                    
+                } else if (!IsSignPress(key) && numbers.Count >- 1  && key.ToString() != "=")
+                {
+                    if (numbers.Count > 1 && !numbers[1].Contains(".") && key == '.')
+                    {
+                        numbers[1] += key;
+                        displayinput = numbers[1];
+                        return displayinput;
+                    }
+                    else if (numbers.Count > 1 && numbers[1].Split('.').Length - 1 == 1 && key != '.')
+                    {
+                        numbers[1] += key;
+                        displayinput = numbers[1];
+                        return displayinput;
+                    }
+                    else if (numbers.Count > 0 && numbers[0].Split('.').Length - 1 == 1 && key == '.')
+                    {
+                        displayinput = numbers[0];
+                        return displayinput;
+                    }
+                    if (numbers.Count == 2)
+                    {
+                        numbers[1] =  numbers[1].ToString() + key.ToString() ;
+                    }
+                    else
+                    {
+                        numbers.Add( key.ToString() );
+                    }
+
                     displayinput = Convert.ToString(numbers[1]);  
                 }
 
@@ -100,13 +115,8 @@ namespace ConsoleCalculator
                    return operationsObj.Calculate(this);
                 }
             }
-         
             return Convert.ToString(Convert.ToDouble(displayinput));
-            
         }
-        
-     
-
 
         private double ToggleSign(double num)
         {         
@@ -114,7 +124,7 @@ namespace ConsoleCalculator
             if (Math.Sign(num) == 1)
                 num *= (-1);
             else
-                num *= (1);
+                num *= (-1);
 
             return num;
         }

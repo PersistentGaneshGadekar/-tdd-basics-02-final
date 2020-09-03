@@ -6,7 +6,7 @@ namespace ConsoleCalculator
 {
     public class Operations
     {
-        public string clearConsole(Calculator calculator)
+        public string ClearConsole(Calculator calculator)
         {
             calculator.numbers.Clear();
             calculator.operations.Clear();
@@ -21,33 +21,37 @@ namespace ConsoleCalculator
             int i = 0;
             foreach (var key in calculator.operations)
             {
+                if (calculator.numbers.Count == 1)
+                {
+                    calculator.numbers.Add(calculator.numbers[0]);
+                }
 
                 switch (key)
                 {
                     case '+':
                         if (isFirstOperation)
-                            result = calculator.numbers[i] + calculator.numbers[i + 1];
+                            result = Convert.ToDouble( calculator.numbers[i]) + Convert.ToDouble( calculator.numbers[i + 1]);
                         else
-                            result = result + calculator.numbers[i + 1];
+                            result +=  Convert.ToDouble(calculator.numbers[i + 1]);
                         break;
                     case '-':
                         if (isFirstOperation)
-                            result = calculator.numbers[i] - calculator.numbers[i + 1];
+                            result = Convert.ToDouble(calculator.numbers[i]) - Convert.ToDouble(calculator.numbers[i + 1]);
                         else
-                            result = result - calculator.numbers[i + 1];
+                            result -=  Convert.ToDouble(calculator.numbers[i + 1]);
                         break;
                     case 'X':
                     case '*':
                         if (isFirstOperation)
-                            result = calculator.numbers[i] * calculator.numbers[i + 1];
+                            result = Convert.ToDouble(calculator.numbers[i]) * Convert.ToDouble(calculator.numbers[i + 1]);
                         else
-                            result = result * calculator.numbers[i + 1];
+                            result *=   Convert.ToDouble(calculator.numbers[i + 1]);
                         break;
                     case '/':
                         if (isFirstOperation)
-                            result = calculator.numbers[i] / calculator.numbers[i + 1];
+                            result = Convert.ToDouble(calculator.numbers[i]) / Convert.ToDouble(calculator.numbers[i + 1]);
                         else
-                            result = result / calculator.numbers[i + 1];
+                            result /=  Convert.ToDouble(calculator.numbers[i + 1]);
                         if (Double.IsInfinity(result))
                         {
                             calculator.numbers.Clear();
@@ -64,7 +68,7 @@ namespace ConsoleCalculator
                         }
                         calculator.numbers.Clear();
                         calculator.operations.Clear();
-                        calculator.numbers.Add(result);
+                        calculator.numbers.Add(result.ToString());
                         return result.ToString();
                     default:
                         break;
@@ -75,7 +79,7 @@ namespace ConsoleCalculator
 
             calculator.numbers.Clear();
             calculator.operations.Clear();
-            calculator.numbers.Add(result);
+            calculator.numbers.Add(result.ToString());
 
             return result.ToString(); ;
 
